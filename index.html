@@ -1,0 +1,369 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhonePe Pulse - Geo Visualization | Sclaria project kinshuk-mahajan-iitj</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bgdark: '#0a0a12',
+            carddark: '#131320',
+            borderdark: '#222238',
+            pppurple: '#6739B7',
+            pplight: '#9b6ef3',
+            ppglow: '#b794f4'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#0a0a12] text-slate-100 min-h-screen font-sans antialiased selection:bg-[#6739B7] selection:text-white">
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-[#0a0a12]/90 backdrop-blur border-b border-[#222238]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#6739B7] to-[#9b6ef3] flex items-center justify-center font-bold text-lg shadow-lg shadow-[#6739B7]/30">
+          पे
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">
+            PhonePe Pulse - Geo Visualization <span class="text-[#9b6ef3] font-medium">| Sclaria project kinshuk-mahajan-iitj</span>
+          </h1>
+        </div>
+      </div>
+      <div class="hidden md:flex items-center gap-2 text-xs text-slate-400">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Live Geo Telemetry</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <!-- Filters Bar -->
+    <section class="bg-[#131320] border border-[#222238] rounded-2xl p-4 shadow-xl">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div>
+          <label class="block text-[11px] uppercase tracking-wider text-slate-400 mb-1">Year</label>
+          <select id="filter-year" onchange="updateDashboard()" class="w-full bg-[#0a0a12] border border-[#222238] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#9b6ef3]">
+            <option value="2024" selected>2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+            <option value="2021">2021</option>
+            <option value="2020">2020</option>
+            <option value="2019">2019</option>
+            <option value="2018">2018</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[11px] uppercase tracking-wider text-slate-400 mb-1">Quarter</label>
+          <select id="filter-quarter" onchange="updateDashboard()" class="w-full bg-[#0a0a12] border border-[#222238] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#9b6ef3]">
+            <option value="Q1">Q1 (Jan-Mar)</option>
+            <option value="Q2">Q2 (Apr-Jun)</option>
+            <option value="Q3">Q3 (Jul-Sep)</option>
+            <option value="Q4" selected>Q4 (Oct-Dec)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[11px] uppercase tracking-wider text-slate-400 mb-1">State</label>
+          <select id="filter-state" onchange="updateDashboard()" class="w-full bg-[#0a0a12] border border-[#222238] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#9b6ef3]">
+            <option value="ALL" selected>All India</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="UP">Uttar Pradesh</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Telangana">Telangana</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Punjab">Punjab</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[11px] uppercase tracking-wider text-slate-400 mb-1">District</label>
+          <select id="filter-district" onchange="updateDashboard()" class="w-full bg-[#0a0a12] border border-[#222238] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#9b6ef3]">
+            <option value="ALL" selected>All Districts</option>
+            <option value="Pune">Pune</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="New Delhi">New Delhi</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Hyderabad">Hyderabad</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[11px] uppercase tracking-wider text-slate-400 mb-1">Category</label>
+          <select id="filter-category" onchange="updateDashboard()" class="w-full bg-[#0a0a12] border border-[#222238] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#9b6ef3]">
+            <option value="Transactions" selected>Transactions</option>
+            <option value="Users">Registered Users</option>
+            <option value="Insurance">Insurance</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[11px] uppercase tracking-wider text-slate-400 mb-1">Payment Type</label>
+          <select id="filter-type" onchange="updateDashboard()" class="w-full bg-[#0a0a12] border border-[#222238] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#9b6ef3]">
+            <option value="Recharge" selected>Recharge &amp; Bill Pay</option>
+            <option value="P2P">Peer-to-Peer (P2P)</option>
+            <option value="Merchant">Merchant Payments</option>
+            <option value="Financial">Financial Services</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 KPI Cards -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-[#131320] border border-[#222238] rounded-2xl p-5 hover:border-[#6739B7] transition-colors">
+        <div class="flex items-center justify-between">
+          <span class="text-xs uppercase tracking-wider text-slate-400">Total Value</span>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">+34.2%</span>
+        </div>
+        <div id="kpi-value" class="mt-3 text-3xl font-extrabold text-white tracking-tight">₹1245 Cr</div>
+        <p class="mt-1 text-xs text-slate-400">YoY transaction value surge</p>
+      </div>
+
+      <div class="bg-[#131320] border border-[#222238] rounded-2xl p-5 hover:border-[#6739B7] transition-colors">
+        <div class="flex items-center justify-between">
+          <span class="text-xs uppercase tracking-wider text-slate-400">Volume</span>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">+28%</span>
+        </div>
+        <div id="kpi-volume" class="mt-3 text-3xl font-extrabold text-white tracking-tight">45.2M</div>
+        <p class="mt-1 text-xs text-slate-400">Total processed transactions</p>
+      </div>
+
+      <div class="bg-[#131320] border border-[#222238] rounded-2xl p-5 hover:border-[#6739B7] transition-colors">
+        <div class="flex items-center justify-between">
+          <span class="text-xs uppercase tracking-wider text-slate-400">Users</span>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#6739B7]/20 text-[#b794f4] border border-[#6739B7]/40">Active</span>
+        </div>
+        <div id="kpi-users" class="mt-3 text-3xl font-extrabold text-white tracking-tight">12.4M</div>
+        <p class="mt-1 text-xs text-slate-400">Registered transacting base</p>
+      </div>
+
+      <div class="bg-[#131320] border border-[#222238] rounded-2xl p-5 hover:border-[#6739B7] transition-colors">
+        <div class="flex items-center justify-between">
+          <span class="text-xs uppercase tracking-wider text-slate-400">Growth</span>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-500/10 text-[#9b6ef3] border border-purple-500/20">QoQ</span>
+        </div>
+        <div id="kpi-growth" class="mt-3 text-3xl font-extrabold text-[#9b6ef3] tracking-tight">34.2%</div>
+        <p class="mt-1 text-xs text-slate-400">Regional digital adoption velocity</p>
+      </div>
+    </section>
+
+    <!-- Main Visual Grid: India Map Grid + Analytics Charts -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- India Map Grid (Choropleth Tile Matrix) -->
+      <div class="lg:col-span-7 bg-[#131320] border border-[#222238] rounded-2xl p-5 flex flex-col justify-between">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <div>
+            <h2 class="text-base font-bold text-white">India Geo State Intensity Grid</h2>
+            <p class="text-xs text-slate-400">State-wise payment volume concentration (₹ Crores)</p>
+          </div>
+          <!-- Purple Intensity Legend -->
+          <div class="flex items-center gap-1.5 text-[11px] text-slate-400">
+            <span>Low</span>
+            <span class="w-4 h-3 rounded bg-[#2a194d]"></span>
+            <span class="w-4 h-3 rounded bg-[#43237d]"></span>
+            <span class="w-4 h-3 rounded bg-[#5c2eb0]"></span>
+            <span class="w-4 h-3 rounded bg-[#7741d9]"></span>
+            <span class="w-4 h-3 rounded bg-[#9b6ef3]"></span>
+            <span>High</span>
+          </div>
+        </div>
+
+        <!-- Stylized India Map Tile Grid -->
+        <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 my-auto" id="india-map-grid">
+          <!-- North Tier -->
+          <div onclick="selectState('Punjab')" class="state-tile cursor-pointer rounded-xl p-3.5 bg-[#2a194d] border border-[#6739B7]/40 hover:scale-[1.02] transition-all">
+            <div class="flex justify-between items-center text-[11px] text-purple-300 font-semibold">
+              <span>PB</span>
+              <span>#9</span>
+            </div>
+            <div class="mt-1 font-bold text-sm text-white">Punjab</div>
+            <div class="mt-0.5 text-base font-extrabold text-purple-200">₹54 Cr</div>
+          </div>
+
+          <div onclick="selectState('Delhi')" class="state-tile cursor-pointer rounded-xl p-3.5 bg-[#53299e] border border-[#9b6ef3]/50 hover:scale-[1.02] transition-all">
+            <div class="flex justify-between items-center text-[11px] text-purple-200 font-semibold">
+              <span>DL</span>
+              <span>#5</span>
+            </div>
+            <div class="mt-1 font-bold text-sm text-white">Delhi</div>
+            <div class="mt-0.5 text-base font-extrabold text-white">₹142 Cr</div>
+          </div>
+
+          <div onclick="selectState('UP')" class="state-tile cursor-pointer rounded-xl p-3.5 bg-[#6739B7] border border-[#b794f4]/60 hover:scale-[1.02] transition-all sm:col-span-2">
+            <div class="flex justify-between items-center text-[11px] text-purple-100 font-semibold">
+              <span>UP</span>
+              <span>#3</span>
+            </div>
+            <div class="mt-1 font-bold text-sm text-white">Uttar Pradesh (UP)</div>
+            <div class="mt-0.5 text-base font-extrabold text-white">₹189 Cr</div>
+          </div>
+
+          <!-- West & Central Tier -->
+          <div onclick="selectState('Rajasthan')" class="state-tile cursor-pointer rounded-xl p-3.5 bg-[#351e63] border border-[#6739B7]/40 hover:scale-[1.02] transition-all">
+            <div class="flex justify-between items-center text-[11px] text-purple-300 font-semibold">
+              <span>RJ</span>
+              <span>#8</span>
+            </div>
+            <div class="mt-1 font-bold text-sm text-white">Rajasthan</div>
+            <div class="mt-0.5 text-base font-extrabold text-purple-100">₹76 Cr</div>
+          </div>
+
+          <div onclick="selectState('Gujarat')" class="state-tile cursor-pointer rounded-xl p-3.5 bg-[#41237a] border border-[#6739B7]/50 hover:scale-[1.02] transition-all">
+            <div class="flex justify-between items-center text-[11px] text-purple-200 font-semibold">
+              <span>GJ</span>
+              <span>#7</span>
+            </div>
+            <div class="mt-1 font-bold text-sm text-white">Gujarat</div>
+            <div class="mt-0.5 text-base font-extrabold text-white">₹98 Cr</div>
+          </div>
+
+          <div onclick="selectState('Maharashtra')" class="state-tile cursor-pointer rounded-xl p-3.5 bg-gradient-to-br from-[#8854e8] to-[#6739B7] border-2 border-[#d6bcfa] shadow-lg shadow-[#6739B7]/40 hover:scale-[1.02] transition-all sm:col-span-2">
+            <div class="flex justify-between items-center text-[11px] text-white font-bold">
+              <span>MH • TOP LEADER</span>
+              <span>#1</span>
+            </div>
+            <div class="mt-1 font-bold text-base text-white">Maharashtra</div>
+            <div class="mt-0.5 text-xl font-extrabold text-white">₹312 Cr</div>
+          </div>
+
+          <!-- South Tier -->
+          <div onclick="selectState('Telangana')" class="state-tile cursor-pointer rounded-xl p-3.5 bg-[#4c2691] border border-[#9b6ef3]/40 hover:scale-[1.02] transition-all">
+            <div class="flex justify-between items-center text-[11px] text-purple-200 font-semibold">
+              <span>TG</span>
+              <span>#6</span>
+            </div>
+            <div class="mt-1 font-bold text-sm text-white">Telangana</div>
+            <div class="mt-0.5 text-base font-extrabold text-white">₹128 Cr</div>
+          </div>
+
+          <div onclick="selectState('Karnataka')" class="state-tile cursor-pointer rounded-xl p-3.5 bg-[#7844d4] border border-[#d6bcfa]/70 shadow-md shadow-[#6739B7]/30 hover:scale-[1.02] transition-all sm:col-span-2">
+            <div class="flex justify-between items-center text-[11px] text-purple-100 font-semibold">
+              <span>KA</span>
+              <span>#2</span>
+            </div>
+            <div class="mt-1 font-bold text-sm text-white">Karnataka</div>
+            <div class="mt-0.5 text-lg font-extrabold text-white">₹245 Cr</div>
+          </div>
+
+          <div onclick="selectState('Tamil Nadu')" class="state-tile cursor-pointer rounded-xl p-3.5 bg-[#5d30ad] border border-[#9b6ef3]/50 hover:scale-[1.02] transition-all">
+            <div class="flex justify-between items-center text-[11px] text-purple-200 font-semibold">
+              <span>TN</span>
+              <span>#4</span>
+            </div>
+            <div class="mt-1 font-bold text-sm text-white">Tamil Nadu</div>
+            <div class="mt-0.5 text-base font-extrabold text-white">₹165 Cr</div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-[#222238] flex items-center justify-between text-xs text-slate-400">
+          <span id="selected-state-info">Showing all 9 primary tracked states • Click any state tile to filter</span>
+          <button onclick="resetFilters()" class="text-[#9b6ef3] hover:text-white font-medium">Reset View</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Top 5 States Bar Chart + Transaction Type Split -->
+      <div class="lg:col-span-5 space-y-6">
+        <!-- Top 5 States Bar Chart -->
+        <div class="bg-[#131320] border border-[#222238] rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-bold text-white">Top 5 States by Value</h2>
+              <p class="text-xs text-slate-400">Contribution in ₹ Crores</p>
+            </div>
+            <span class="text-xs text-[#9b6ef3] font-semibold">Rankings</span>
+          </div>
+
+          <div class="space-y-3.5">
+            <!-- Maharashtra -->
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1">
+                <span class="text-slate-200">1. Maharashtra</span>
+                <span class="text-white font-bold">₹312 Cr</span>
+              </div>
+              <div class="w-full h-2.5 bg-[#0a0a12] rounded-full overflow-hidden">
+                <div class="h-full rounded-full bg-gradient-to-r from-[#6739B7] to-[#b794f4]" style="width: 100%"></div>
+              </div>
+            </div>
+
+            <!-- Karnataka -->
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1">
+                <span class="text-slate-200">2. Karnataka</span>
+                <span class="text-white font-bold">₹245 Cr</span>
+              </div>
+              <div class="w-full h-2.5 bg-[#0a0a12] rounded-full overflow-hidden">
+                <div class="h-full rounded-full bg-gradient-to-r from-[#6739B7] to-[#9b6ef3]" style="width: 78.5%"></div>
+              </div>
+            </div>
+
+            <!-- UP -->
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1">
+                <span class="text-slate-200">3. Uttar Pradesh</span>
+                <span class="text-white font-bold">₹189 Cr</span>
+              </div>
+              <div class="w-full h-2.5 bg-[#0a0a12] rounded-full overflow-hidden">
+                <div class="h-full rounded-full bg-[#7741d9]" style="width: 60.5%"></div>
+              </div>
+            </div>
+
+            <!-- Tamil Nadu -->
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1">
+                <span class="text-slate-200">4. Tamil Nadu</span>
+                <span class="text-white font-bold">₹165 Cr</span>
+              </div>
+              <div class="w-full h-2.5 bg-[#0a0a12] rounded-full overflow-hidden">
+                <div class="h-full rounded-full bg-[#6739B7]" style="width: 52.8%"></div>
+              </div>
+            </div>
+
+            <!-- Delhi -->
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1">
+                <span class="text-slate-200">5. Delhi</span>
+                <span class="text-white font-bold">₹142 Cr</span>
+              </div>
+              <div class="w-full h-2.5 bg-[#0a0a12] rounded-full overflow-hidden">
+                <div class="h-full rounded-full bg-[#522b96]" style="width: 45.5%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transaction Type Breakdown -->
+        <div class="bg-[#131320] border border-[#222238] rounded-2xl p-5">
+          <div class="mb-4">
+            <h2 class="text-base font-bold text-white">Transaction Type Split</h2>
+            <p class="text-xs text-slate-400">Share across payment categories</p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center gap-6">
+            <!-- Pure SVG Donut Chart -->
+            <div class="relative w-32 h-32 shrink-0">
+              <svg viewBox="0 0 36 36" class="w-32 h-32 -rotate-90">
+                <circle cx="18" cy="18" r="14" fill="transparent" stroke="#1e1e30" stroke-width="4.5"></circle>
+                <!-- 42% Recharge -->
+                <circle cx="18" cy="18" r="14" fill="transparent" stroke="#9b6ef3" stroke-width="4.5"
+                        stroke-dasharray="36.95 87.96" stroke-dashoffset="0"></circle>
+                <!-- 30% Merchant -->
+                <circle cx="18" cy="18" r="14" fill="transparent" stroke="#6739B7" stroke-width="4.5"
+                        stroke-dasharray="26.39 87.96" stroke-dashoffset="-36.95"></circle>
+                <!-- 28% P2P -->
+                <circle cx="18" cy="18" r="14" fill="transparent" stroke="#38bdf8" stroke-width="4.5"
+                        stroke-dasharray="24.63 87.96" stroke-dashoffset="-63.34"></circle>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+        
